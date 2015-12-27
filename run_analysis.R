@@ -1,8 +1,11 @@
-# This script merges the traiining and test data sets to create one with all
+# This script merges the training and test data sets to create one with all
 # measurements, then it extracts the mean and standard deviation variables of 
 # each measurement to create an intermediate output data set. Ultimately it 
 # creates an independent tidy data set with the average of each measurement for 
 # each activity and each subject.
+
+library(tidyr)
+library(dplyr)
 
 variableNames <- read.table("features.txt",
                             col.names = c("index", "feature"))
@@ -49,7 +52,7 @@ dfAll$Param1 <- as.factor(dfAll$Param1)
 dfAll$Param2 <- as.factor(dfAll$Param2)
 
 dfIntermediate <- dfAll[dfAll$variable == "mean" | dfAll$variable == "std", ]
-dfSummarized <- dfIntermediate %>% 
+dfSummarized <- dfIntermediate[dfIntermediate$variable == "mean",] %>% 
     group_by(Subject, Activity, signal) %>% 
     summarize(average = mean(value, na.rm = TRUE))
 
